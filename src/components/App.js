@@ -1,27 +1,34 @@
 import React, { Component } from 'react';
-import '../App.css';
+//import '../App.css';
 import { connect } from 'react-redux'
 import { addRecipi, removeFromCalender } from '../actions'
-
+import { capitalize } from '../utils/helper'
+import CalendarIcon from 'react-icons/lib/fa/calendar-plus-o'
 
 class App extends Component {
 
-  handleThings = () => {
-    this.props.dispatch(addRecipi({}))
-  }
 
   render() {
     console.log('props =', this.props);
+    const { calender, remove } = this.props;
+    const mealOrder = ['breakfast', 'lunch', 'dinner'];
+
     return (
-      <div >
-        Hello World
+      <div className='container'>
+        <ul className='meal-types'>
+          {mealOrder.map((mealType) => (
+            <li key={mealType} className='subheader'>
+              {capitalize(mealType)}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
 }
 
 
-function mapStateToProps(calender) {
+function mapStateToProps({ calender }, { food }) {
   const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
   return {
     calender: dayOrder.map((day) => (
@@ -29,7 +36,7 @@ function mapStateToProps(calender) {
         day,
         meals: Object.keys(calender[day]).reduce((meals, meal) => {
           meals[meal] = calender[day][meal] ?
-            calender[day][meal] :
+            food[calender[day][meal]] :
             null
 
           return meals;
@@ -37,6 +44,14 @@ function mapStateToProps(calender) {
         }, {})
       }
     ))
+  }
+}
+
+function mapDispactToProps(dispatch) {
+  return {
+    selectRecipi: (data) => (addRecipi(data)),
+    remove: (data) => (removeFromCalender(data))
+
   }
 }
 
@@ -62,4 +77,4 @@ function mapStateToProps(calender) {
 //   }
 // }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispactToProps)(App);

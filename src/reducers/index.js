@@ -3,6 +3,23 @@ import {
     REMOVE_FROM_CALENDER
 } from '../actions'
 
+import { stat } from 'fs';
+import { combineReducers } from 'redux';
+
+function food(state = {}, action) {
+
+    switch (action.type) {
+        case ADD_RECIPI:
+            const { recipi } = action
+            return {
+                ...state,
+                [recipi.label]: recipi
+            }
+        default:
+            return state;
+    }
+}
+
 const initialCalendarState = {
     sunday: {
         breakfast: null,
@@ -67,4 +84,7 @@ function calender(state = initialCalendarState, action) {
     }
 }
 
-export default calender;
+export default combineReducers({
+    calender,
+    food,
+});
